@@ -28,10 +28,10 @@ object Simulation extends App {
     case x => x.toString
   }
 
-  val programClass = classOf[Main11]
-  val nodes = 100
+  val programClass = classOf[Main16_0]
+  val nodes = 30
   val neighbourRange = 200
-  val (width, height) = (1920, 1080)
+  val (width, height) = (1080, 720)
   ViewSetting.windowConfiguration = WindowConfiguration(width, height)
   ScafiProgramBuilder (
     Random(nodes, width, height),
@@ -85,8 +85,24 @@ class Main8 extends AggregateProgramSkeleton {
   override def main() = minHoodPlus(nbrRange)
 }
 
+class Main8_0 extends AggregateProgramSkeleton {
+  override def main() = (mid(), foldhoodPlus((Double.MaxValue, mid()))((t1, t2) => if(t1._1 > t2._1) t2 else t1)((nbrRange(), nbr(mid())))._2)
+}
+
 class Main9 extends AggregateProgramSkeleton {
   override def main() = rep(0){_+1}
+}
+
+class Main9_0 extends AggregateProgramSkeleton {
+  override def main() = mux(sense1){
+    (rep(0){ x => if(x < 1000) x + 1 else 1000})
+  }(0)
+}
+
+class Main9_1 extends AggregateProgramSkeleton {
+  override def main() = branch(sense1){
+    (rep(0){ x => if(x < 1000) x + 1 else 1000})
+  }(0)
 }
 
 class Main10 extends AggregateProgramSkeleton {
@@ -103,6 +119,16 @@ class Main12 extends AggregateProgramSkeleton {
   override def main() = maxHoodPlus(boolToInt(nbr{sense1}))
 }
 
+class Main12_0 extends AggregateProgramSkeleton {
+
+  override def main(): Set[ID] = foldhood[Set[ID]](Set())(_++_)(nbr{Set(mid())})
+}
+
+class Main12_1 extends AggregateProgramSkeleton {
+
+  override def main(): Set[ID] = foldhoodPlus(Set[ID]())(_++_)(nbr{Set(mid())})
+}
+
 class Main13 extends AggregateProgramSkeleton {
   override def main() = foldhoodPlus(0)(_+_){nbr{1}}
 }
@@ -113,10 +139,18 @@ class Main14 extends AggregateProgramSkeleton {
   override def main() = rep(0){ x => boolToInt(sense1) max maxHoodPlus( nbr{x}) }
 }
 
+class Main14_0 extends AggregateProgramSkeleton {
+  override def main() = rep(mid()){ x => x max maxHoodPlus( nbr{x} ) }
+}
+
 class Main15 extends AggregateProgramSkeleton {
   override def main() = rep(Double.MaxValue){ d => mux[Double](sense1){0.0}{minHoodPlus(nbr{d}+1.0)} }
 }
 
 class Main16 extends AggregateProgramSkeleton {
   override def main() = rep(Double.MaxValue){ d => mux[Double](sense1){0.0}{minHoodPlus(nbr{d}+nbrRange)} }
+}
+
+class Main16_0 extends AggregateProgramSkeleton {
+  override def main() = rep(Double.MaxValue){ d => mux[Double](sense1){0.0}{minHoodPlus(nbr{d} + branch(sense2)(nbrRange() * 5)(nbrRange))}}
 }
